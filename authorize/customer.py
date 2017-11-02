@@ -12,8 +12,14 @@ class Customer(object):
         return Configuration.api.customer.from_transaction(transaction_id, params)
 
     @staticmethod
-    def details(customer_id):
-        return Configuration.api.customer.details(customer_id)
+    def details(customer_id=None, merchant_id=None):
+        if customer_id is None and merchant_id is None:
+            raise TypeError(
+                'You must specify either the '
+                '`customer_id` or `merchant_id`'
+            )
+
+        return Configuration.api.customer.details(customer_id, merchant_id)
 
     @staticmethod
     def update(customer_id, params={}):

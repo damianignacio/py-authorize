@@ -9,6 +9,7 @@ RENAME_FIELDS = {
     'customerShippingAddressId': 'address_id',
     'customerPaymentProfileIdList': 'payment_ids',
     'customerShippingAddressIdList': 'address_ids',
+    'merchantCustomerId': 'merchant_id',
     'validationDirectResponseList': 'validation_responses',
     'purchaseOrderNumber': 'order_number',
     'paymentProfiles': 'payments',

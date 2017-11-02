@@ -2,6 +2,7 @@ import random
 from authorize import Customer, Transaction
 from authorize import AuthorizeResponseError
 
+from uuid import uuid4
 from datetime import date
 
 from nose.plugins.attrib import attr
@@ -55,9 +56,47 @@ CUSTOMER_WITH_CARD = {
     },
 }
 
+CUSTOMER_WITH_MERCHANT_CARD = {
+    'merchant_id': 'vincent@vincentcatalano.com',
+    'description': 'Cool web developer guy',
+    'credit_card': {
+        'card_number': '4111111111111111',
+        'expiration_date': '04/{0}'.format(date.today().year + 1),
+        'card_code': '456',
+    },
+}
+
+CUSTOMER_WITH_MERCHANT_ID = {
+    'merchant_id': uuid4().hex[:20],
+    'email': 'mail+1@example.com',
+}
+
+CUSTOMER_WITH_MERCHANT_ID_DUPE = {
+    'merchant_id': uuid4().hex[:20],
+    'email': 'mail+2@example.com',
+}
+
 
 @attr('live_tests')
 class CustomerTests(TestCase):
+
+    def test_live_customer_duplicated_merchant_id(self):
+        Customer.create(CUSTOMER_WITH_MERCHANT_ID_DUPE)
+
+        # Cannot have two customers with the same `merchant_id`
+        self.assertRaises(
+            AuthorizeResponseError, Customer.create, CUSTOMER_WITH_MERCHANT_ID_DUPE
+        )
+
+    def test_live_customer_from_merchant_id(self):
+        merchant_id = CUSTOMER_WITH_MERCHANT_ID['merchant_id']
+        email = CUSTOMER_WITH_MERCHANT_ID['email']
+
+        Customer.create(CUSTOMER_WITH_MERCHANT_ID)
+        result = Customer.details(merchant_id=merchant_id)
+        profile = result.profile
+        self.assertEquals(profile.merchant_id, merchant_id)
+        self.assertEquals(profile.email, email)
 
     def test_live_customer(self):
         # Create customers

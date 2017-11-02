@@ -19,8 +19,8 @@ class CustomerAPI(BaseAPI):
 
         return self.api._make_call(self._from_transaction_request(transaction_id, customer))
 
-    def details(self, customer_id):
-        return self.api._make_call(self._details_request(customer_id))
+    def details(self, customer_id=None, merchant_id=None):
+        return self.api._make_call(self._details_request(customer_id, merchant_id))
 
     def update(self, customer_id, params={}):
         customer = self._deserialize(CustomerBaseSchema().bind(), params)
@@ -79,9 +79,15 @@ class CustomerAPI(BaseAPI):
 
         return request
 
-    def _details_request(self, customer_id):
+    def _details_request(self, customer_id, merchant_id):
         request = self.api._base_request('getCustomerProfileRequest')
-        E.SubElement(request, 'customerProfileId').text = customer_id
+
+        if customer_id:
+            E.SubElement(request, 'customerProfileId').text = customer_id
+
+        if merchant_id:
+            E.SubElement(request, 'merchantCustomerId').text = merchant_id
+
         E.SubElement(request, 'unmaskExpirationDate').text = 'true'
         return request
 
