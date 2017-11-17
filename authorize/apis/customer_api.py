@@ -79,7 +79,7 @@ class CustomerAPI(BaseAPI):
 
         return request
 
-    def _details_request(self, customer_id, merchant_id):
+    def _details_request(self, customer_id, merchant_id=None):
         request = self.api._base_request('getCustomerProfileRequest')
 
         if customer_id:

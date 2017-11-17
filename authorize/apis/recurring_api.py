@@ -132,6 +132,10 @@ class RecurringAPI(BaseAPI):
             subscription.append(create_payment(params['credit_card']))
         if 'bank_account' in params:
             subscription.append(create_payment(params['bank_account']))
+
+        if 'order' in params:
+            subscription.append(create_order(params['order']))
+
         if 'profile' in params:
             profile = E.SubElement(subscription, 'profile')
 
@@ -141,9 +145,6 @@ class RecurringAPI(BaseAPI):
                 E.SubElement(profile, 'customerPaymentProfileId').text = params['profile']['payment_id']
             if 'address_id' in params['profile'].keys():
                 E.SubElement(profile, 'customerAddressId').text = params['profile']['address_id']
-
-        if 'order' in params:
-            subscription.append(create_order(params['order']))
 
         if 'customer' in params:
             customer = E.SubElement(subscription, 'customer')
