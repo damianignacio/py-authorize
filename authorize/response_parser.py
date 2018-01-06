@@ -32,6 +32,7 @@ NESTED_LIST_FIELDS = [
     'errors',
     'customerPaymentProfileIdList',
     'customerShippingAddressIdList',
+    'subscriptionDetails',
     'transactions',
     'batchList',
     'statistics',

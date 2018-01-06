@@ -51,6 +51,24 @@ class TransactionAPI(BaseAPI):
         else:
             return self.api._make_call(self._unsettled_list_request())
 
+    def list_by_customer(self, customer_id, **kwargs):
+        request = self.api._base_request('getTransactionListForCustomerRequest')
+
+        E.SubElement(request, 'customerProfileId').text = customer_id
+
+        if 'payment_id' in kwargs:
+            E.SubElement(request, 'customerPaymentProfileId').text = kwargs['payment_id']
+
+        if 'paging' in kwargs:
+            paging_el = E.SubElement(request, 'paging')
+            if 'limit' in kwargs['paging']:
+                E.SubElement(paging_el, 'limit').text = str(kwargs['paging']['limit'])
+
+            if 'offset' in kwargs['paging']:
+                E.SubElement(paging_el, 'offset').text = str(kwargs['paging']['offset'])
+
+        return self.api._make_call(request)
+
     def _transaction_request(self, xact_type, xact={}):
         is_cim = 'customer_id' in xact
 
