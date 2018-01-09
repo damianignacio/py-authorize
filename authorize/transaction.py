@@ -44,5 +44,5 @@ class Transaction(object):
         return Configuration.api.transaction.list(batch_id)
 
     @staticmethod
-    def list_for_customer(customer_id, **kwargs):
-        return Configuration.api.transaction.list_for_customer(customer_id, **kwargs)
+    def list_by_customer(customer_id, **kwargs):
+        return Configuration.api.transaction.list_by_customer(customer_id, **kwargs)

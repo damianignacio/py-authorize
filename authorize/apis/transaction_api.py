@@ -51,7 +51,7 @@ class TransactionAPI(BaseAPI):
         else:
             return self.api._make_call(self._unsettled_list_request())
 
-    def list_by_customer(self, customer_id, **kwargs):
+    def list_by_customer(self, customer_id, merchant_id, **kwargs):
         request = self.api._base_request('getTransactionListForCustomerRequest')
 
         E.SubElement(request, 'customerProfileId').text = customer_id

@@ -38,6 +38,7 @@ NESTED_LIST_FIELDS = [
     'statistics',
     'lineItems',
     'userFields',
+    'arbTransactions',
 ]
 
 DIRECT_RESPONSE_FIELDS = {
