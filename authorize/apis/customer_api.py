@@ -65,6 +65,9 @@ class CustomerAPI(BaseAPI):
 
         request.append(profile)
 
+        if 'credit_card' in customer and 'validation_mode' in customer['credit_card']:
+            E.SubElement(request, 'validationMode').text = customer['credit_card']['validation_mode']
+
         return request
 
     def _from_transaction_request(self, transaction_id, customer=None):

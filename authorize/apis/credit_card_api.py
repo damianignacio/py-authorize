@@ -2,7 +2,7 @@ from authorize.apis.payment_profile_api import PaymentProfileAPI
 from authorize.schemas import CreateCreditCardSchema
 from authorize.schemas import UpdateCreditCardSchema
 from authorize.schemas import ValidateCreditCardSchema
-from authorize.xml_data import *
+from authorize.xml_data import E
 
 
 class CreditCardAPI(PaymentProfileAPI):
@@ -22,14 +22,19 @@ class CreditCardAPI(PaymentProfileAPI):
     # The following methods generate the XML for the corresponding API calls.
     # This makes unit testing each of the calls easier.
     def _create_request(self, customer_id, card={}):
-        return self._make_xml('createCustomerPaymentProfileRequest', customer_id, None, params=card)
+        request = self._make_xml('createCustomerPaymentProfileRequest', customer_id, None, params=card)
+
+        if 'validation_mode' in card:
+            E.SubElement(request, 'validationMode').text = card['validation_mode']
+
+        return request
 
     def _update_request(self, customer_id, payment_id, card={}):
 
         # Issue 30: If only the last 4 digits of a credit card are provided,
         # add the additional XXXX character mask that is required.
         if len(card['card_number']) == 4:
-          card['card_number'] = 'XXXX' + card['card_number']
+            card['card_number'] = 'XXXX' + card['card_number']
 
         return self._make_xml('updateCustomerPaymentProfileRequest', customer_id, payment_id, params=card)
 

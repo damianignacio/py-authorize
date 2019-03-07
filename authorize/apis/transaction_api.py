@@ -14,11 +14,13 @@ class TransactionAPI(BaseAPI):
 
     def sale(self, params={}):
         xact = self._deserialize(AIMTransactionSchema(), params)
-        return self.api._make_call(self._transaction_request('authCaptureTransaction', xact))
+        c = self._transaction_request('authCaptureTransaction', xact)
+        return self.api._make_call(c)
 
     def auth(self, params={}):
         xact = self._deserialize(AIMTransactionSchema(), params)
-        return self.api._make_call(self._transaction_request('authOnlyTransaction', xact))
+        c = self._transaction_request('authOnlyTransaction', xact)
+        return self.api._make_call(c)
 
     def settle(self, transaction_id, amount=None):
         return self.api._make_call(self._settle_request(transaction_id, amount))
@@ -91,6 +93,9 @@ class TransactionAPI(BaseAPI):
 
             payment = E.SubElement(profile, 'paymentProfile')
             E.SubElement(payment, 'paymentProfileId').text = xact['payment_id']
+
+            if 'card_code' in xact:
+                E.SubElement(payment, 'cardCode').text = xact['card_code']
 
             if 'address_id' in xact:
                 E.SubElement(profile, 'shippingProfileId').text = xact['address_id']

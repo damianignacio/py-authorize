@@ -75,6 +75,10 @@ class CreditCardSchema(colander.MappingSchema):
                                     validator=colander.Regex(r'^[0-9]{3,4}$', 'The card code is invalid'),
                                     missing=colander.drop)
 
+    validation_mode = colander.SchemaNode(colander.String(),
+                                          validator=colander.OneOf(['liveMode', 'testMode']),
+                                          missing=colander.drop)
+
     @staticmethod
     def validator(node, kw):
         exp_year = kw['expiration_year']
@@ -374,6 +378,10 @@ class AIMTransactionSchema(TransactionBaseSchema):
     billing = AddressSchema(missing=colander.drop)
     shipping = AddressSchema(missing=colander.drop)
     customer = CustomerSchema(missing=colander.drop)
+
+    card_code = colander.SchemaNode(colander.String(),
+                                    validator=colander.Regex(r'^[0-9]{3,4}$', 'The card code is invalid'),
+                                    missing=colander.drop)
 
 
 class CreditTransactionSchema(CIMBaseSchema):
